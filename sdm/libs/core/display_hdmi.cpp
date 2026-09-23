@@ -77,13 +77,17 @@ DisplayError DisplayHDMI::Init() {
 
   error = hw_intf_->SetDisplayAttributes(active_mode_index);
   if (error != kErrorNone) {
+    DLOGE("SetDisplayAttributes(%u) failed. Error = %d",
+          active_mode_index, error);
     HWInterface::Destroy(hw_intf_);
+    hw_intf_ = nullptr;
+    return error;
   }
   panel_config_index_ = active_mode_index;
   error = DisplayBase::Init();
   if (error != kErrorNone) {
-    DisplayBase::Deinit();
     HWInterface::Destroy(hw_intf_);
+    hw_intf_ = nullptr;
     return error;
   }
 
@@ -157,7 +161,7 @@ DisplayError DisplayHDMI::Init() {
 
   if (error != kErrorNone) {
     DisplayBase::Deinit();
-    HWInterface::Destroy(hw_intf_);
+    hw_intf_ = nullptr;
     DLOGE("Failed to create hardware events interface. Error = %d", error);
   }
 

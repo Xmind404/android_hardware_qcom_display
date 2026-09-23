@@ -405,6 +405,8 @@ DisplayError HWHDMI::SetDisplayAttributes(uint32_t index) {
 
   if (MapHDMIDisplayTiming(timing_mode, &vscreeninfo,
                            hw_panel_info_.hdr_enabled, pref_fmt_) == false) {
+    DLOGE("MapHDMIDisplayTiming failed for config %u, VIC %u",
+          index, timing_mode->video_format);
     return kErrorParameters;
   }
 
